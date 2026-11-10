@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { HealthBar, Skeleton, Spinner, Toast } from "../../../../components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-800",
@@ -30,7 +31,7 @@ function formatDateTime(value) {
 }
 
 function ProjectSkeleton() {
-  return <div aria-label="Loading project" className="animate-pulse space-y-5"><div className="h-40 rounded-2xl bg-white" /><div className="grid gap-5 lg:grid-cols-2"><div className="h-96 rounded-2xl bg-white" /><div className="h-96 rounded-2xl bg-white" /></div></div>;
+  return <div aria-label="Loading project" className="space-y-5"><Skeleton className="h-40 rounded-2xl" /><div className="grid gap-5 lg:grid-cols-2"><Skeleton className="h-96 rounded-2xl" /><Skeleton className="h-96 rounded-2xl" /></div></div>;
 }
 
 export default function EmployeeProjectPage() {
@@ -174,12 +175,12 @@ export default function EmployeeProjectPage() {
         </header>
 
         {error && <div role="alert" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"><span>{error}</span><button type="button" onClick={() => loadProject(true)} className="font-semibold underline">Retry</button></div>}
-        {notice && <div role="status" className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</div>}
+        <Toast key={notice} message={notice} onDismiss={() => setNotice("")} />
         {actionError && <div role="alert" className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">{actionError}</div>}
 
         {loading ? <ProjectSkeleton /> : project ? (
           <>
-            <section className="mb-6 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+            <section data-reveal className="mb-6 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
@@ -191,6 +192,7 @@ export default function EmployeeProjectPage() {
                 <div className="min-w-32 rounded-xl bg-slate-50 px-4 py-3 text-center">
                   <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Health score</p>
                   <p className="mt-1 text-2xl font-bold text-slate-900">{project.healthScore ?? 0}<span className="text-sm text-slate-400">/100</span></p>
+                  <div className="mt-2"><HealthBar value={project.healthScore} /></div>
                 </div>
               </div>
               <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -237,7 +239,7 @@ export default function EmployeeProjectPage() {
                           <input required type="number" min="0" max="100" step="1" value={checkin.completionPercentage} onChange={(event) => setCheckin({ ...checkin, completionPercentage: event.target.value })} className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 outline-none focus:border-emerald-600 focus:bg-white" placeholder="0–100" />
                         </label>
                       </div>
-                      <button type="submit" disabled={savingCheckin} className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">{savingCheckin ? "Submitting..." : "Submit weekly check-in"}</button>
+                      <button type="submit" disabled={savingCheckin} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">{savingCheckin && <Spinner label="Submitting check-in" />}{savingCheckin ? "Submitting..." : "Submit weekly check-in"}</button>
                     </form>
                   )}
                 </section>
@@ -261,7 +263,7 @@ export default function EmployeeProjectPage() {
                           <p className="mt-2 text-sm text-slate-600">{risk.mitigationPlan || "No mitigation plan provided."}</p>
                           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                             <input aria-label={`Mitigation plan for ${risk.title}`} value={mitigationPlans[risk._id] ?? ""} onChange={(event) => setMitigationPlans({ ...mitigationPlans, [risk._id]: event.target.value })} className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:bg-white" placeholder="Update mitigation plan" />
-                            <button type="button" disabled={savingRiskId === risk._id || (mitigationPlans[risk._id] ?? "") === (risk.mitigationPlan || "")} onClick={() => updateRisk(risk, { mitigationPlan: mitigationPlans[risk._id] ?? "" })} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50">{savingRiskId === risk._id ? "Saving..." : "Save plan"}</button>
+                            <button type="button" disabled={savingRiskId === risk._id || (mitigationPlans[risk._id] ?? "") === (risk.mitigationPlan || "")} onClick={() => updateRisk(risk, { mitigationPlan: mitigationPlans[risk._id] ?? "" })} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50">{savingRiskId === risk._id && <Spinner label="Saving risk" />}{savingRiskId === risk._id ? "Saving..." : "Save plan"}</button>
                             <button type="button" disabled={savingRiskId === risk._id} onClick={() => updateRisk(risk, { status: risk.status === "OPEN" ? "RESOLVED" : "OPEN" })} className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50">{risk.status === "OPEN" ? "Resolve" : "Reopen"}</button>
                           </div>
                         </article>
@@ -283,7 +285,7 @@ export default function EmployeeProjectPage() {
                         <input maxLength={2000} value={riskForm.mitigationPlan} onChange={(event) => setRiskForm({ ...riskForm, mitigationPlan: event.target.value })} className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 font-normal outline-none focus:border-emerald-600 focus:bg-white" placeholder="Optional next steps" />
                       </label>
                     </div>
-                    <button type="submit" disabled={savingRisk} className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60">{savingRisk ? "Saving..." : "Create risk"}</button>
+                    <button type="submit" disabled={savingRisk} className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60">{savingRisk && <Spinner label="Saving risk" />}{savingRisk ? "Saving..." : "Create risk"}</button>
                   </form>
                 </section>
               </div>
@@ -294,9 +296,9 @@ export default function EmployeeProjectPage() {
                   <p className="mt-1 text-sm text-slate-500">Recent check-ins, client feedback, risks, and status changes.</p>
                 </div>
                 {data.timeline.length === 0 ? <p className="rounded-xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">No project activity yet.</p> : (
-                  <ol className="space-y-0">
+                  <ol className="timeline-list relative space-y-0">
                     {data.timeline.map((item, index) => (
-                      <li key={item.id} className="relative flex gap-3 pb-6 last:pb-0">
+                      <li key={item.id} style={{ "--item-index": index }} className="relative flex gap-3 pb-6 last:pb-0">
                         {index < data.timeline.length - 1 && <span aria-hidden="true" className="absolute left-[11px] top-6 h-full w-px bg-slate-200" />}
                         <span aria-hidden="true" className={`relative mt-1 h-6 w-6 shrink-0 rounded-full ring-4 ring-white ${item.type === "FEEDBACK_SUBMITTED" ? "bg-sky-500" : item.type.startsWith("RISK") ? "bg-rose-500" : item.type === "PROJECT_STATUS_CHANGED" ? "bg-amber-500" : "bg-emerald-500"}`} />
                         <div className="min-w-0 flex-1">

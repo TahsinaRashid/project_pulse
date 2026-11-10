@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "../src/app/globals.css";
+import { UiEffects } from "./components/UiEffects";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-slate-100 text-slate-900">{children}</body>
+      <body className="min-h-full bg-slate-100 text-slate-900">
+        <UiEffects />
+        {children}
+      </body>
     </html>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CountUp } from "./components/UiEffects";
 
 const roleDestinations = {
 	ADMIN: "/dashboard/admin",
@@ -106,7 +107,7 @@ function DashboardPreview() {
 						<div className="mb-5 flex items-end justify-between gap-2">
 							<div>
 								<p className="text-xs font-medium text-[#778178]">Portfolio health</p>
-								<p className="mt-1 text-3xl font-semibold tracking-normal text-[#20342b]">82<span className="text-lg text-[#718078]"> / 100</span></p>
+								<p className="mt-1 text-3xl font-semibold tracking-normal text-[#20342b]"><CountUp value={82} /><span className="text-lg text-[#718078]"> / 100</span></p>
 							</div>
 							<span className="mb-1 text-xs font-semibold text-[#438056]">On track</span>
 						</div>
@@ -124,7 +125,7 @@ function DashboardPreview() {
 					<div className="space-y-3">
 						<div className="rounded-lg bg-[#f5f6f2] p-4">
 							<p className="text-xs text-[#778178]">Active projects</p>
-							<p className="mt-2 text-2xl font-semibold text-[#20342b]">12</p>
+							<p className="mt-2 text-2xl font-semibold text-[#20342b]"><CountUp value={12} /></p>
 							<p className="mt-1 text-xs text-[#748174]">Across 3 teams</p>
 						</div>
 						<div className="rounded-lg border border-[#eceee9] p-4">
@@ -189,17 +190,17 @@ export default function HomePage() {
 
 	return (
 		<div id="top" className="min-h-screen bg-[#f7f7f2] font-sans text-[#20342b]">
-			<header className="sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
+			<header className="site-nav sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
 				<div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
 					<a href="#top" className="flex items-center gap-2.5" aria-label="Project Pulse home">
 						<BrandMark />
 						<span className="text-base font-semibold tracking-normal">Project Pulse</span>
 					</a>
 					<nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
-						<a className="text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#top">Home</a>
-						<a className="text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#features">Features</a>
-						<a className="text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#about">About</a>
-						<a className="text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#contact">Contact</a>
+						<a className="nav-link text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#top">Home</a>
+						<a className="nav-link text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#features">Features</a>
+						<a className="nav-link text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#about">About</a>
+						<a className="nav-link text-sm text-[#5b685e] transition hover:text-[#214b3a]" href="#contact">Contact</a>
 					</nav>
 					<div className="hidden items-center gap-3 lg:flex">
 						<a href="/login" className="rounded-lg px-4 py-2.5 text-sm font-semibold text-[#335543] transition hover:bg-[#e9ede5]">Login</a>
@@ -218,8 +219,8 @@ export default function HomePage() {
 						</span>
 					</button>
 				</div>
-				{menuOpen && (
-					<nav className="border-t border-[#e5e8df] bg-[#f7f7f2] px-5 py-4 lg:hidden" aria-label="Mobile navigation">
+				<div className={`mobile-menu border-t border-[#e5e8df] bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
+					<nav className="py-4" aria-label="Mobile navigation">
 						<div className="mx-auto flex max-w-7xl flex-col gap-1">
 							<a onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href="#top">Home</a>
 							<a onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href="#features">Features</a>
@@ -231,20 +232,20 @@ export default function HomePage() {
 							</div>
 						</div>
 					</nav>
-				)}
+				</div>
 			</header>
 
 			<main>
-				<section className="relative overflow-hidden px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
+				<section data-reveal className="relative overflow-hidden px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
 					<div className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: "linear-gradient(rgba(54, 78, 57, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(54, 78, 57, 0.045) 1px, transparent 1px)", backgroundSize: "44px 44px" }} aria-hidden="true" />
 					<div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
 						<div className="max-w-xl">
-							<p className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#dbe3d8] bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase text-[#43644b]">
+							<p data-hero-item style={{ "--hero-delay": "40ms" }} className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#dbe3d8] bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase text-[#43644b]">
 								<span className="size-1.5 rounded-full bg-[#e99569]" /> Project delivery, in sync
 							</p>
-							<h1 className="text-5xl font-semibold leading-[1.05] tracking-normal text-[#20342b] sm:text-6xl">Make every project feel <span className="text-[#56805d]">in focus.</span></h1>
-							<p className="mt-6 max-w-lg text-base leading-7 text-[#637066] sm:text-lg sm:leading-8">One calm, clear place to follow project health, share progress, and catch delivery risks before they become surprises.</p>
-							<div className="mt-8 flex flex-wrap items-center gap-3">
+							<h1 data-hero-item style={{ "--hero-delay": "120ms" }} className="text-5xl font-semibold leading-[1.05] tracking-normal text-[#20342b] sm:text-6xl">Make every project feel <span className="text-[#56805d]">in focus.</span></h1>
+							<p data-hero-item style={{ "--hero-delay": "200ms" }} className="mt-6 max-w-lg text-base leading-7 text-[#637066] sm:text-lg sm:leading-8">One calm, clear place to follow project health, share progress, and catch delivery risks before they become surprises.</p>
+							<div data-hero-item style={{ "--hero-delay": "280ms" }} className="mt-8 flex flex-wrap items-center gap-3">
 								<a href="/login" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-[#214b3a] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#173c2c]">
 									Get started <span aria-hidden="true">&#8594;</span>
 								</a>
@@ -263,7 +264,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section id="features" className="scroll-mt-24 border-y border-[#e6e8e1] bg-white px-5 py-20 sm:px-8 sm:py-24">
+				<section id="features" data-reveal className="scroll-mt-24 border-y border-[#e6e8e1] bg-white px-5 py-20 sm:px-8 sm:py-24">
 					<div className="mx-auto max-w-7xl">
 						<div className="mb-12 grid gap-5 md:grid-cols-[0.8fr_1.2fr] md:items-end">
 							<div>
@@ -273,8 +274,8 @@ export default function HomePage() {
 							<p className="max-w-xl text-base leading-7 text-[#68746a] md:justify-self-end">Project Pulse connects the updates, feedback, and project signals your team needs to make good decisions with confidence.</p>
 						</div>
 						<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-							{features.map((feature) => (
-								<article key={feature.number} className="group flex min-h-56 flex-col border-t-2 border-[#dce5d9] bg-[#f8f9f5] p-5 transition duration-200 hover:-translate-y-1 hover:border-[#e99569] hover:bg-[#f3f6ef]">
+							{features.map((feature, index) => (
+								<article data-reveal style={{ "--reveal-delay": `${index * 65}ms` }} key={feature.number} className="reveal-card group flex min-h-56 flex-col border-t-2 border-[#dce5d9] bg-[#f8f9f5] p-5 transition duration-200 hover:-translate-y-1 hover:border-[#e99569] hover:bg-[#f3f6ef]">
 									<div className="flex items-center justify-between">
 										<span className="text-xs font-semibold text-[#8b998d]">{feature.number}</span>
 										<span className="size-2 rounded-full bg-[#e99569] transition group-hover:scale-125" aria-hidden="true" />
@@ -288,7 +289,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section id="how-it-works" className="scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
+				<section id="how-it-works" data-reveal className="scroll-mt-24 px-5 py-20 sm:px-8 sm:py-24">
 					<div className="mx-auto max-w-7xl">
 						<div className="max-w-2xl">
 							<p className="text-xs font-bold uppercase text-[#638069]">How it works</p>
@@ -299,8 +300,8 @@ export default function HomePage() {
 								["01", "Bring the work together", "Set up projects and invite the people who need a clear view of delivery."],
 								["02", "Share a regular pulse", "Teams post check-ins, clients share feedback, and activity stays connected."],
 								["03", "Act on what you see", "Use health signals and early risk visibility to focus attention where it matters."],
-							].map(([number, title, description]) => (
-								<article key={number} className="relative border-l border-[#cfd9ce] pl-5 sm:pl-6">
+							].map(([number, title, description], index) => (
+								<article data-reveal style={{ "--reveal-delay": `${index * 70}ms` }} key={number} className="relative border-l border-[#cfd9ce] pl-5 sm:pl-6">
 									<span className="absolute -left-2 top-0 grid size-4 place-items-center rounded-full bg-[#e99569] ring-4 ring-[#f7f7f2]" aria-hidden="true" />
 									<p className="text-xs font-bold text-[#7e9280]">STEP {number}</p>
 									<h3 className="mt-4 text-xl font-semibold text-[#283d31]">{title}</h3>
@@ -311,7 +312,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section id="about" className="scroll-mt-24 bg-[#eaf0e7] px-5 py-20 sm:px-8 sm:py-24">
+				<section id="about" data-reveal className="scroll-mt-24 bg-[#eaf0e7] px-5 py-20 sm:px-8 sm:py-24">
 					<div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
 						<div className="max-w-md">
 							<p className="text-xs font-bold uppercase text-[#638069]">Built around your people</p>
@@ -319,8 +320,8 @@ export default function HomePage() {
 							<p className="mt-5 text-base leading-7 text-[#637066]">Everyone sees the work through a different lens. Project Pulse gives each role a useful way to contribute to the same source of truth.</p>
 						</div>
 						<div className="grid gap-3 sm:grid-cols-3">
-							{roles.map((role) => (
-								<article key={role.name} className={`${role.color} min-h-52 rounded-lg p-5`}>
+							{roles.map((role, index) => (
+								<article data-reveal style={{ "--reveal-delay": `${index * 75}ms` }} key={role.name} className={`${role.color} reveal-card min-h-52 rounded-lg p-5`}>
 									<span className="grid size-10 place-items-center rounded-lg bg-white/75 text-sm font-bold text-[#49664e]">{role.index}</span>
 									<h3 className="mt-7 text-lg font-semibold text-[#263d30]">{role.name}</h3>
 									<p className="mt-2 text-sm leading-6 text-[#5e6d61]">{role.description}</p>
@@ -330,7 +331,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section className="px-5 py-20 sm:px-8 sm:py-24">
+				<section data-reveal className="px-5 py-20 sm:px-8 sm:py-24">
 					<div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
 						<div>
 							<p className="text-xs font-bold uppercase text-[#638069]">A better signal, week by week</p>
@@ -345,7 +346,7 @@ export default function HomePage() {
 								["Early", "Risk visibility"],
 							].map(([value, label]) => (
 								<div key={label} className="min-h-32 bg-white p-4 sm:p-5">
-									<p className="text-2xl font-semibold text-[#42684a] sm:text-3xl">{value}</p>
+									<p className="text-2xl font-semibold text-[#42684a] sm:text-3xl">{/^\d+$/.test(value) ? <CountUp value={Number(value)} minimumDigits={2} /> : value}</p>
 									<p className="mt-3 text-xs leading-5 text-[#748075]">{label}</p>
 								</div>
 							))}
@@ -353,7 +354,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section id="contact" className="scroll-mt-24 px-5 pb-20 sm:px-8 sm:pb-24">
+				<section id="contact" data-reveal className="scroll-mt-24 px-5 pb-20 sm:px-8 sm:pb-24">
 					<div className="relative mx-auto max-w-7xl overflow-hidden rounded-xl bg-[#214b3a] px-6 py-12 text-white sm:px-12 sm:py-14">
 						<div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 opacity-20" style={{ backgroundImage: "linear-gradient(135deg, transparent 48%, #c6d9bc 49%, #c6d9bc 50%, transparent 51%)", backgroundSize: "28px 28px" }} aria-hidden="true" />
 						<div className="relative flex flex-col justify-between gap-8 md:flex-row md:items-center">
@@ -370,7 +371,7 @@ export default function HomePage() {
 					</div>
 				</section>
 
-				<section className="border-t border-[#e6e8e1] bg-white px-5 py-20 sm:px-8 sm:py-24">
+				<section data-reveal className="border-t border-[#e6e8e1] bg-white px-5 py-20 sm:px-8 sm:py-24">
 					<div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.7fr_1.3fr]">
 						<div>
 							<p className="text-xs font-bold uppercase text-[#638069]">Good to know</p>
@@ -383,7 +384,7 @@ export default function HomePage() {
 										{item.question}
 										<span className="grid size-7 shrink-0 place-items-center rounded-full border border-[#dce4d9] text-[#527259] transition group-open:rotate-45" aria-hidden="true">+</span>
 									</summary>
-									<p className="max-w-2xl pr-10 pt-4 text-sm leading-6 text-[#68746a]">{item.answer}</p>
+										<div className="faq-answer"><p className="max-w-2xl pr-10 pt-4 text-sm leading-6 text-[#68746a]">{item.answer}</p></div>
 								</details>
 							))}
 						</div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { HealthBar, Skeleton, Spinner } from "../../components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-700",
@@ -221,9 +222,13 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100 text-slate-700">
-        Loading admin dashboard...
-      </div>
+      <main aria-label="Loading admin dashboard" className="min-h-screen bg-slate-100 p-6 text-slate-700 md:p-10">
+        <div className="mx-auto max-w-7xl space-y-6">
+          <Skeleton className="h-28 rounded-2xl" />
+          <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]"><Skeleton className="h-96 rounded-2xl" /><Skeleton className="h-96 rounded-2xl" /></div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{[1, 2, 3, 4, 5].map((item) => <Skeleton key={item} className="h-28 rounded-2xl" />)}</div>
+        </div>
+      </main>
     );
   }
 
@@ -277,7 +282,7 @@ export default function AdminDashboardPage() {
               ) : null}
             </div>
 
-            <form onSubmit={handleProjectSubmit} className="space-y-4">
+            <form onSubmit={handleProjectSubmit} className={`space-y-4 ${editingProjectId ? "modal-panel" : ""}`}>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="block text-sm text-slate-600">
                   <span className="mb-1.5 block font-medium text-slate-700">Project name</span>
@@ -381,8 +386,9 @@ export default function AdminDashboardPage() {
               <button
                 type="submit"
                 disabled={savingProject}
-                className="inline-flex items-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
+                {savingProject && <Spinner label="Saving project" />}
                 {savingProject ? "Saving..." : editingProjectId ? "Update project" : "Create project"}
               </button>
             </form>
@@ -404,7 +410,7 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        <section className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <section data-reveal-stagger className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <MetricCard label="Total projects" value={stats.totalProjects ?? 0} detail={`${stats.completedProjects ?? 0} completed`} />
           <MetricCard label="On track" value={stats.onTrackProjects ?? 0} detail={`${healthSummary.healthy ?? 0} healthy`} accent="emerald" />
           <MetricCard label="At risk" value={stats.atRiskProjects ?? 0} detail={`${stats.criticalProjects ?? 0} critical`} accent="amber" />
@@ -421,12 +427,12 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
 
-            <div className="space-y-4">
+            <div data-reveal-stagger className="space-y-4">
               {projects.length === 0 ? (
                 <p className="text-sm text-slate-500">No projects are available yet.</p>
               ) : (
-                projects.map((project) => (
-                  <article key={project._id} className="rounded-2xl border border-slate-200 p-4">
+                projects.map((project, index) => (
+                  <article data-reveal style={{ "--reveal-delay": `${index * 55}ms` }} key={project._id} className="rounded-2xl border border-slate-200 p-4">
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div>
                         <h3 className="text-lg font-semibold text-slate-800">{project.name}</h3>
@@ -606,7 +612,7 @@ function MetricCard({ label, value, detail, accent = "slate" }) {
   };
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <div data-reveal className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
       <p className="text-sm text-slate-500">{label}</p>
       <div className={`mt-4 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${accentStyles[accent] || accentStyles.slate}`}>
         {value}
@@ -621,6 +627,7 @@ function MiniStat({ label, value }) {
     <div className="rounded-xl bg-slate-50 p-3">
       <p className="text-[11px] uppercase tracking-wide text-slate-400">{label}</p>
       <p className="mt-1 text-base font-semibold text-slate-800">{value}</p>
+      {label === "Health" && <div className="mt-2"><HealthBar value={Number.parseInt(value, 10)} /></div>}
     </div>
   );
 }

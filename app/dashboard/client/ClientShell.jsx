@@ -31,14 +31,14 @@ export default function ClientShell({ children, name }) {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f3f5ef] text-[#20342b]">
-      <header className="sticky top-0 z-40 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
+      <header className="site-nav sticky top-0 z-40 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
         <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link href="/dashboard/client" className="flex shrink-0 items-center gap-2.5" aria-label="Project Pulse client dashboard">
             <BrandMark />
             <span className="text-base font-semibold">Project Pulse</span>
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6" aria-label="Client navigation">
-            <Link href="/dashboard/client" className="text-sm font-medium text-[#42574a] transition hover:text-[#214b3a]">
+            <Link href="/dashboard/client" aria-current="page" className="nav-link text-sm font-medium text-[#42574a] transition hover:text-[#214b3a]">
               Overview
             </Link>
             <span className="hidden text-sm text-[#738076] sm:inline">{name || "Client"}</span>

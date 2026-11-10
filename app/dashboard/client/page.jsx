@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import ClientShell from "./ClientShell";
+import { HealthBar, Skeleton } from "../../components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-800",
@@ -28,12 +29,12 @@ function formatDate(value) {
 
 function DashboardSkeleton() {
   return (
-    <div aria-label="Loading client dashboard" className="animate-pulse space-y-8">
+    <div aria-label="Loading client dashboard" className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-3">
-        {[1, 2, 3].map((item) => <div key={item} className="h-28 rounded-2xl bg-white ring-1 ring-[#e2e7dd]" />)}
+        {[1, 2, 3].map((item) => <Skeleton key={item} className="h-28 rounded-2xl ring-1 ring-[#e2e7dd]" />)}
       </div>
-      <div className="grid gap-5 lg:grid-cols-2">
-        {[1, 2].map((item) => <div key={item} className="h-64 rounded-2xl bg-white ring-1 ring-[#e2e7dd]" />)}
+      <div data-reveal-stagger className="grid gap-5 lg:grid-cols-2">
+        {[1, 2].map((item) => <Skeleton key={item} className="h-64 rounded-2xl ring-1 ring-[#e2e7dd]" />)}
       </div>
     </div>
   );
@@ -42,7 +43,7 @@ function DashboardSkeleton() {
 function ProjectCard({ project }) {
   const status = statusLabels[project.status] ? project.status : "AT_RISK";
   return (
-    <Link href={`/dashboard/client/projects/${project._id}`} className="group block rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#e2e7dd] transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#4a795e] sm:p-6">
+    <Link data-reveal href={`/dashboard/client/projects/${project._id}`} className="group block rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#e2e7dd] transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#4a795e] sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-lg font-semibold text-[#20342b] transition group-hover:text-[#214b3a]">{project.name}</h2>
@@ -68,6 +69,7 @@ function ProjectCard({ project }) {
         <div className="min-w-32">
           <p className="text-xs font-semibold uppercase tracking-wide text-[#849087]">Health score</p>
           <p className="mt-1 text-2xl font-bold text-[#203a2d]">{project.healthScore ?? 0}<span className="ml-1 text-sm font-medium text-[#87938a]">/ 100</span></p>
+          <div className="mt-2"><HealthBar value={project.healthScore} /></div>
         </div>
         <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${project.feedbackSubmittedThisWeek ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-800"}`}>
           <span className={`size-2 rounded-full ${project.feedbackSubmittedThisWeek ? "bg-emerald-500" : "bg-amber-500"}`} />
@@ -150,7 +152,7 @@ export default function ClientDashboardPage() {
 
         {loading ? <DashboardSkeleton /> : dashboard ? (
           <>
-            <section aria-label="Client overview" className="mb-9 grid gap-4 sm:grid-cols-3">
+            <section data-reveal-stagger aria-label="Client overview" className="mb-9 grid gap-4 sm:grid-cols-3">
               <SummaryCard label="Assigned projects" value={stats.totalProjects ?? 0} note="Projects assigned to your account" accent="text-[#203a2d]" />
               <SummaryCard label="Feedback submitted" value={stats.submittedThisWeek ?? 0} note="For this ISO week" accent="text-emerald-700" />
               <SummaryCard label="Feedback pending" value={stats.pendingFeedback ?? 0} note="Projects still awaiting this week’s feedback" accent="text-amber-700" />
@@ -164,7 +166,7 @@ export default function ClientDashboardPage() {
                 <span className="text-sm text-[#718074]">{projects.length} {projects.length === 1 ? "project" : "projects"}</span>
               </div>
               {projects.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-[#cbd6c9] bg-white px-6 py-14 text-center">
+                <div data-reveal className="rounded-2xl border border-dashed border-[#cbd6c9] bg-white px-6 py-14 text-center">
                   <p className="text-lg font-semibold text-[#203a2d]">No projects assigned to you yet</p>
                   <p className="mt-2 text-sm text-[#718074]">Projects assigned to your account will appear here.</p>
                 </div>

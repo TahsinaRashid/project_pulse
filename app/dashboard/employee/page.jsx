@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { HealthBar, Skeleton } from "../../components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-800",
@@ -31,6 +32,7 @@ function formatDate(value) {
 function ProjectCard({ project }) {
   return (
     <Link
+      data-reveal
       href={`/dashboard/employee/projects/${project._id}`}
       className="group block rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
     >
@@ -48,6 +50,7 @@ function ProjectCard({ project }) {
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Health score</p>
           <p className="mt-1 text-xl font-bold text-slate-800">{project.healthScore ?? 0}<span className="text-sm font-medium text-slate-400"> / 100</span></p>
+          <div className="mt-2"><HealthBar value={project.healthScore} /></div>
         </div>
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Completion</p>
@@ -72,12 +75,12 @@ function ProjectCard({ project }) {
 
 function DashboardSkeleton() {
   return (
-    <div aria-label="Loading employee dashboard" className="animate-pulse space-y-6">
+    <div aria-label="Loading employee dashboard" className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-3">
-        {[1, 2, 3].map((item) => <div key={item} className="h-28 rounded-2xl bg-white ring-1 ring-slate-200" />)}
+        {[1, 2, 3].map((item) => <Skeleton key={item} className="h-28 rounded-2xl ring-1 ring-slate-200" />)}
       </div>
-      <div className="grid gap-5 lg:grid-cols-2">
-        {[1, 2].map((item) => <div key={item} className="h-56 rounded-2xl bg-white ring-1 ring-slate-200" />)}
+      <div data-reveal-stagger className="grid gap-5 lg:grid-cols-2">
+        {[1, 2].map((item) => <Skeleton key={item} className="h-56 rounded-2xl ring-1 ring-slate-200" />)}
       </div>
     </div>
   );
@@ -152,8 +155,8 @@ export default function EmployeeDashboardPage() {
 
         {loading ? <DashboardSkeleton /> : dashboard ? (
           <>
-            <section aria-label="Employee overview" className="mb-8 grid gap-4 sm:grid-cols-3">
-              <SummaryCard label="Assigned projects" value={stats.totalProjects ?? 0} description="Projects on your delivery roster" accent="text-slate-900" />
+            <section data-reveal-stagger aria-label="Employee overview" className="mb-8 grid gap-4 sm:grid-cols-3">
+                  <SummaryCard label="Assigned projects" value={stats.totalProjects ?? 0} description="Projects on your delivery roster" accent="text-slate-900" />
               <SummaryCard label="Pending check-ins" value={stats.pendingCheckins ?? 0} description="Due for the current ISO week" accent="text-amber-700" />
               <SummaryCard label="Open risks" value={stats.openRisks ?? 0} description="Across your assigned projects" accent="text-rose-700" />
             </section>
@@ -167,7 +170,7 @@ export default function EmployeeDashboardPage() {
                 <span className="text-sm text-slate-500">{projects.length} {projects.length === 1 ? "project" : "projects"}</span>
               </div>
               {projects.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                <div data-reveal className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
                   <p className="text-lg font-semibold text-slate-800">No projects assigned yet</p>
                   <p className="mt-2 text-sm text-slate-500">When a project is assigned to you, it will appear here.</p>
                 </div>
@@ -190,7 +193,7 @@ export default function EmployeeDashboardPage() {
 
 function SummaryCard({ label, value, description, accent }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <div data-reveal className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
       <p className="text-sm font-medium text-slate-500">{label}</p>
       <p className={`mt-3 text-3xl font-bold ${accent}`}>{value}</p>
       <p className="mt-2 text-xs text-slate-500">{description}</p>

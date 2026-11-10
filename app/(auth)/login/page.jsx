@@ -36,14 +36,14 @@ function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
+    <header className="site-nav sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Project Pulse home">
           <BrandMark />
           <span className="text-base font-semibold text-[#20342b]">Project Pulse</span>
         </Link>
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
-          {links.map(([label, href]) => <Link key={label} className="text-sm text-[#5b685e] transition hover:text-[#214b3a]" href={href}>{label}</Link>)}
+          {links.map(([label, href]) => <Link key={label} className="nav-link text-sm text-[#5b685e] transition hover:text-[#214b3a]" href={href}>{label}</Link>)}
         </nav>
         <button
           type="button"
@@ -58,13 +58,13 @@ function Navbar() {
           </span>
         </button>
       </div>
-      {menuOpen && (
-        <nav className="border-t border-[#e5e8df] bg-[#f7f7f2] px-5 py-4 lg:hidden" aria-label="Mobile navigation">
+      <div className={`mobile-menu border-t border-[#e5e8df] bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
+        <nav className="py-4" aria-label="Mobile navigation">
           <div className="mx-auto flex max-w-7xl flex-col gap-1">
             {links.map(([label, href]) => <Link key={label} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href={href}>{label}</Link>)}
           </div>
         </nav>
-      )}
+      </div>
     </header>
   );
 }
@@ -183,7 +183,7 @@ export default function LoginPage() {
       <Navbar />
       <main className="relative flex flex-1 items-center justify-center overflow-hidden px-5 py-16 sm:px-8">
         <div className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(rgba(54, 78, 57, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(54, 78, 57, 0.045) 1px, transparent 1px)', backgroundSize: '44px 44px' }} aria-hidden="true" />
-        <section className="relative w-full max-w-md border-t-2 border-[#e99569] bg-white p-7 shadow-[0_28px_80px_-48px_rgba(28,47,37,0.45)] sm:p-9" aria-labelledby="login-heading">
+        <section className="auth-card modal-panel relative w-full max-w-md border-t-2 border-[#e99569] bg-white p-7 shadow-[0_28px_80px_-48px_rgba(28,47,37,0.45)] sm:p-9" aria-labelledby="login-heading">
           <p className="text-xs font-bold uppercase text-[#638069]">Welcome back</p>
           <h1 id="login-heading" className="mt-3 text-3xl font-semibold leading-tight text-[#20342b]">Log in to Project Pulse</h1>
           <p className="mt-2 text-sm leading-6 text-[#637066]">Access your project monitoring workspace.</p>
@@ -241,7 +241,7 @@ export default function LoginPage() {
               </select>
             </div>
 
-            {error && <p id="login-error" role="alert" className="rounded-lg border border-[#e8b9a2] bg-[#fff5ef] px-3.5 py-3 text-sm font-medium text-[#8b3f2c]">{error}</p>}
+            {error && <p id="login-error" role="alert" className="inline-error rounded-lg border border-[#e8b9a2] bg-[#fff5ef] px-3.5 py-3 text-sm font-medium text-[#8b3f2c]">{error}</p>}
 
             <button
               type="submit"

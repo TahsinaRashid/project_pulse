@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import ClientShell from "../../ClientShell";
+import { HealthBar, Skeleton, Spinner, Toast } from "../../../../components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-800",
@@ -36,11 +37,11 @@ function formatDateTime(value) {
 
 function ProjectSkeleton() {
   return (
-    <div aria-label="Loading project" className="animate-pulse space-y-6">
-      <div className="h-48 rounded-3xl bg-white ring-1 ring-[#e2e7dd]" />
+    <div aria-label="Loading project" className="space-y-6">
+      <Skeleton className="h-48 rounded-3xl ring-1 ring-[#e2e7dd]" />
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="h-[34rem] rounded-2xl bg-white ring-1 ring-[#e2e7dd]" />
-        <div className="h-[34rem] rounded-2xl bg-white ring-1 ring-[#e2e7dd]" />
+        <Skeleton className="h-[34rem] rounded-2xl ring-1 ring-[#e2e7dd]" />
+        <Skeleton className="h-[34rem] rounded-2xl ring-1 ring-[#e2e7dd]" />
       </div>
     </div>
   );
@@ -174,7 +175,7 @@ export default function ClientProjectPage() {
             <button type="button" onClick={() => loadProject(true)} className="font-semibold underline">Retry</button>
           </div>
         )}
-        {notice && <div role="status" className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</div>}
+        <Toast key={notice} message={notice} onDismiss={() => setNotice("")} />
         {actionError && <div role="alert" className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">{actionError}</div>}
 
         {loading ? <ProjectSkeleton /> : project ? (
@@ -192,6 +193,7 @@ export default function ClientProjectPage() {
                 <div className="min-w-36 rounded-2xl bg-[#f3f5ef] px-5 py-4 text-center">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#718074]">Health score</p>
                   <p className="mt-1 text-3xl font-bold text-[#203a2d]">{project.healthScore ?? 0}<span className="ml-1 text-sm font-medium text-[#87938a]">/100</span></p>
+                  <div className="mt-2"><HealthBar value={project.healthScore} /></div>
                 </div>
               </div>
               <div className="mt-6 grid gap-4 border-t border-[#edf0e9] pt-5 sm:grid-cols-2">
@@ -224,7 +226,8 @@ export default function ClientProjectPage() {
                         <textarea required minLength={5} maxLength={500} rows={3} value={feedback.issueDescription} onChange={(event) => setFeedback((current) => ({ ...current, issueDescription: event.target.value }))} className="mt-2 w-full rounded-xl border border-[#d7dfd4] bg-[#fbfcf9] px-3 py-2.5 font-normal leading-6 text-[#20342b] outline-none transition focus:border-[#66816d] focus:bg-white" placeholder="Briefly describe the issue (5–500 characters)." />
                       </label>
                     )}
-                    <button type="submit" disabled={submitting} className="w-full rounded-xl bg-[#214b3a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#18392c] disabled:cursor-not-allowed disabled:opacity-60">
+                    <button type="submit" disabled={submitting} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#214b3a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#18392c] disabled:cursor-not-allowed disabled:opacity-60">
+                      {submitting && <Spinner label="Submitting feedback" />}
                       {submitting ? "Submitting feedback…" : "Submit weekly feedback"}
                     </button>
                   </form>
@@ -239,9 +242,9 @@ export default function ClientProjectPage() {
                 {timeline.length === 0 ? (
                   <div className="rounded-xl border border-dashed border-[#d7dfd4] px-4 py-10 text-center text-sm text-[#718074]">Activity will appear here as your project progresses.</div>
                 ) : (
-                  <ol className="space-y-0">
+                  <ol className="timeline-list space-y-0">
                     {timeline.map((item, index) => (
-                      <li key={item.id} className="relative flex gap-4 pb-6 last:pb-0">
+                      <li key={item.id} style={{ "--item-index": index }} className="relative flex gap-4 pb-6 last:pb-0">
                         {index < timeline.length - 1 && <span aria-hidden="true" className="absolute left-[7px] top-4 h-full w-px bg-[#e2e7dd]" />}
                         <span aria-hidden="true" className={`relative mt-1.5 size-4 shrink-0 rounded-full border-[3px] border-white ring-1 ${item.type === "FEEDBACK_SUBMITTED" ? "bg-[#f3a879] ring-[#f3a879]" : item.type.includes("RISK") ? "bg-amber-500 ring-amber-500" : item.type === "PROJECT_STATUS_CHANGED" ? "bg-[#52735c] ring-[#52735c]" : "bg-[#8ba78d] ring-[#8ba78d]"}`} />
                         <div className="min-w-0 flex-1">

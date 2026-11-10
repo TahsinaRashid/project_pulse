@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../../app/components/UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-700",
@@ -81,8 +82,12 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100 text-slate-600">
-        Loading project dashboard...
+      <div aria-label="Loading project dashboard" className="min-h-screen bg-slate-100 p-6 text-slate-600 md:p-10">
+        <div className="mx-auto max-w-7xl space-y-6">
+          <Skeleton className="h-28 rounded-2xl" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[1, 2, 3, 4].map((item) => <Skeleton key={item} className="h-28 rounded-2xl" />)}</div>
+          <div className="grid gap-6 lg:grid-cols-[1.5fr_0.9fr]"><Skeleton className="h-96 rounded-2xl" /><Skeleton className="h-96 rounded-2xl" /></div>
+        </div>
       </div>
     );
   }
