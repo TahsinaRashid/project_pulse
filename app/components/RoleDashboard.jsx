@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Skeleton } from "../../app/components/UiEffects";
+import { Skeleton } from "./UiEffects";
 
 const statusStyles = {
   ON_TRACK: "bg-emerald-100 text-emerald-700",

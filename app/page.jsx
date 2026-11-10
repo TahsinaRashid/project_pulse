@@ -191,7 +191,7 @@ export default function HomePage() {
 	return (
 		<div id="top" className="min-h-screen bg-[#f7f7f2] font-sans text-[#20342b]">
 			<header className="site-nav sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
-				<div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+				<div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
 					<a href="#top" className="flex items-center gap-2.5" aria-label="Project Pulse home">
 						<BrandMark />
 						<span className="text-base font-semibold tracking-normal">Project Pulse</span>
@@ -219,9 +219,9 @@ export default function HomePage() {
 						</span>
 					</button>
 				</div>
-				<div className={`mobile-menu border-t border-[#e5e8df] bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
-					<nav className="py-4" aria-label="Mobile navigation">
-						<div className="mx-auto flex max-w-7xl flex-col gap-1">
+				<div className={`mobile-menu bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open border-t border-[#e5e8df]" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
+					<nav aria-label="Mobile navigation">
+						<div className="mx-auto flex max-w-7xl flex-col gap-1 py-4">
 							<a onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href="#top">Home</a>
 							<a onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href="#features">Features</a>
 							<a onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href="#about">About</a>
@@ -236,7 +236,7 @@ export default function HomePage() {
 			</header>
 
 			<main>
-				<section data-reveal className="relative overflow-hidden px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
+				<section data-reveal className="relative overflow-hidden px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
 					<div className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: "linear-gradient(rgba(54, 78, 57, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(54, 78, 57, 0.045) 1px, transparent 1px)", backgroundSize: "44px 44px" }} aria-hidden="true" />
 					<div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
 						<div className="max-w-xl">

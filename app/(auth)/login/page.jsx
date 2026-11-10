@@ -37,7 +37,7 @@ function Navbar() {
 
   return (
     <header className="site-nav sticky top-0 z-50 border-b border-[#e5e8df] bg-[#f7f7f2]/95 backdrop-blur">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Project Pulse home">
           <BrandMark />
           <span className="text-base font-semibold text-[#20342b]">Project Pulse</span>
@@ -58,9 +58,9 @@ function Navbar() {
           </span>
         </button>
       </div>
-      <div className={`mobile-menu border-t border-[#e5e8df] bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
-        <nav className="py-4" aria-label="Mobile navigation">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1">
+      <div className={`mobile-menu bg-[#f7f7f2] px-5 lg:hidden ${menuOpen ? "is-open border-t border-[#e5e8df]" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
+        <nav aria-label="Mobile navigation">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1 py-4">
             {links.map(([label, href]) => <Link key={label} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-[#42574a] hover:bg-[#e9ede5]" href={href}>{label}</Link>)}
           </div>
         </nav>
