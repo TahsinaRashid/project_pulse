@@ -154,6 +154,11 @@ export async function PUT(req) {
       }
     }
 
+    const previousProject = await Project.findById(parsed.data.id).lean();
+    if (!previousProject) {
+      return jsonResponse({ message: 'Project not found.' }, 404);
+    }
+
     const project = await Project.findByIdAndUpdate(
       parsed.data.id,
       {
@@ -168,8 +173,14 @@ export async function PUT(req) {
       { new: true }
     );
 
-    if (!project) {
-      return jsonResponse({ message: 'Project not found.' }, 404);
+    if (previousProject.status !== project.status) {
+      await Activity.create({
+        projectId: project._id,
+        actorId: user._id,
+        type: 'PROJECT_STATUS_CHANGED',
+        description: `Project status changed from ${previousProject.status} to ${project.status}.`,
+        createdAt: new Date(),
+      });
     }
 
     await Activity.create({

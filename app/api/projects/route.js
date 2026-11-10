@@ -6,10 +6,11 @@ const { z } = require('zod');
 
 export async function GET(req) {
   try {
-    const { response } = await requireUser(req);
+    const { user, response } = await requireUser(req, ['ADMIN', 'EMPLOYEE']);
     if (response) return response;
     await connect();
-    const projects = await Project.find().lean();
+    const filter = user.role === 'EMPLOYEE' ? { employeeIds: user._id } : {};
+    const projects = await Project.find(filter).lean();
     return jsonResponse({ projects }, 200);
   } catch (err) {
     console.error(err);

@@ -31,7 +31,7 @@ export function proxy(request) {
       return NextResponse.redirect(new URL(destination, request.url));
     }
 
-    if (pathname !== destination) {
+    if (pathname !== destination && !pathname.startsWith(`${destination}/`)) {
       return NextResponse.redirect(new URL(destination, request.url));
     }
   }

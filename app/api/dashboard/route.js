@@ -8,7 +8,7 @@ const ClientFeedback = require('../../../models/ClientFeedback');
 
 export async function GET(req) {
   try {
-    const { user, response } = await requireUser(req);
+    const { user, response } = await requireUser(req, ['ADMIN', 'EMPLOYEE']);
     if (response) return response;
 
     await connect();
